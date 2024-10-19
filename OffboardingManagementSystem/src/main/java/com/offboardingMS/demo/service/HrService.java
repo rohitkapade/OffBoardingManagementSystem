@@ -17,10 +17,10 @@ public interface HrService {
 	
 	public String offboardingProcess();
 	public ResignApplication initiateOffboardingProcesss(Integer empId) throws EmployeeNotFoundException;
-	public ResignApplication checkStatusOfResignApplication(Integer empId) throws EmployeeNotFoundException;
+	public ResignApplication checkStatusOfResignApplication(Integer appId) throws EmployeeNotFoundException;
 	public String removeEmployee(Integer id) throws ResignationNotFoundException, EmployeeNotFoundException;
 	public ResignationApplicationResponseDTO updateStatusOfApplication(ApplicationUpdateByHrDTO applicationUpdateByHr)
-			throws ResignationNotFoundException, NotAllowedException;
+			throws ResignationNotFoundException, NotAllowedException, EmployeeNotFoundException;
 	public HumanResourceManager myDetails();
 
 }

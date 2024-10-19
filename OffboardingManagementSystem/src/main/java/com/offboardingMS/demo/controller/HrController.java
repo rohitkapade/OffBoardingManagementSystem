@@ -36,14 +36,14 @@ public class HrController {
 		return new ResponseEntity<ResignApplication>(resignationApp,HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/checkApplicationStatus/{empId}")
-	public ResponseEntity<ResignApplication> checkAppStatus(@PathVariable Integer empId) throws EmployeeNotFoundException{
-		ResignApplication resignationApp = hrService.checkStatusOfResignApplication(empId);
+	@PostMapping("/checkApplicationStatus/{appId}")
+	public ResponseEntity<ResignApplication> checkAppStatus(@PathVariable Integer appId) throws EmployeeNotFoundException{
+		ResignApplication resignationApp = hrService.checkStatusOfResignApplication(appId);
 		return new ResponseEntity<ResignApplication>(resignationApp,HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/updateApplicationStatus/")
-	public ResponseEntity<ResignationApplicationResponseDTO> updateStatusOfApplication(@RequestBody ApplicationUpdateByHrDTO applicationUpdateByHrDTO) throws ResignationNotFoundException, NotAllowedException{
+	public ResponseEntity<ResignationApplicationResponseDTO> updateStatusOfApplication(@RequestBody ApplicationUpdateByHrDTO applicationUpdateByHrDTO) throws ResignationNotFoundException, NotAllowedException, EmployeeNotFoundException{
 		ResignationApplicationResponseDTO response = hrService.updateStatusOfApplication(applicationUpdateByHrDTO);
 		return new ResponseEntity<ResignationApplicationResponseDTO>(response,HttpStatus.OK);
 	}

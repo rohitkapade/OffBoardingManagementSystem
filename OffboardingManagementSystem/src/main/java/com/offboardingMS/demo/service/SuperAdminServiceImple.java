@@ -1,5 +1,6 @@
 package com.offboardingMS.demo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +76,8 @@ public class SuperAdminServiceImple implements SuperAdminService{
 		Optional<Employee> employee = empRepo.findById(empId);
 		if(employee.isPresent()) {
 			Employee emp = employee.get();
-			ResignApplication app = resignationAppRepo.findByEmployee(emp);
-			return app;
+			List<ResignApplication> app = resignationAppRepo.findByEmployee(emp);
+			return app.get(0);
 		}
 		throw new EmployeeNotFoundException("Employee not found by employee Id");
 	}

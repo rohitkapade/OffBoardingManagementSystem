@@ -32,7 +32,7 @@ public class DepartmentHeadController {
 	}
 	
 	@PostMapping("/updateApplicationStatus/")
-	public ResponseEntity<ResignationApplicationResponseDTO> updateStatusOfApplication(@RequestBody ApplicationUpdateByDhDto applicationUpdateByDhDto) throws ResignationNotFoundException, NotAllowedException{
+	public ResponseEntity<ResignationApplicationResponseDTO> updateStatusOfApplication(@RequestBody ApplicationUpdateByDhDto applicationUpdateByDhDto) throws ResignationNotFoundException, NotAllowedException, EmployeeNotFoundException{
 		System.out.println("in dh contro");
 		ResignationApplicationResponseDTO response = departHeadService.updateStatusOfApplication(applicationUpdateByDhDto);
 		return new ResponseEntity<ResignationApplicationResponseDTO>(response,HttpStatus.OK);

@@ -3,7 +3,7 @@ package com.offboardingMS.demo.model;
 public class ApplicationUpdateByDhDto {
 	
 	Integer applicationId;
-	DepartmentHead departmentHead;
+	Integer deptHeadId;
 	
 	public Integer getApplicationId() {
 		return applicationId;
@@ -11,12 +11,15 @@ public class ApplicationUpdateByDhDto {
 	public void setApplicationId(Integer applicationId) {
 		this.applicationId = applicationId;
 	}
-	public DepartmentHead getDepartmentHead() {
-		return departmentHead;
+	public Integer getDeptHeadId() {
+		return deptHeadId;
 	}
-	public void setDepartmentHead(DepartmentHead departmentHead) {
-		this.departmentHead = departmentHead;
+	public void setDeptHeadId(Integer deptHeadId) {
+		this.deptHeadId = deptHeadId;
 	}
+
+	
+	
 	
 	
 }

@@ -15,5 +15,5 @@ public interface DepartHeadService {
 	
 	public ResignApplication checkStatusOfResignApplication(Integer empId) throws EmployeeNotFoundException;
 //	public ResignApplication updateStatusOfApplication(Integer appId);
-	public ResignationApplicationResponseDTO updateStatusOfApplication(ApplicationUpdateByDhDto applicationUpdateByDh) throws ResignationNotFoundException, NotAllowedException;
+	public ResignationApplicationResponseDTO updateStatusOfApplication(ApplicationUpdateByDhDto applicationUpdateByDh) throws ResignationNotFoundException, NotAllowedException, EmployeeNotFoundException;
 }

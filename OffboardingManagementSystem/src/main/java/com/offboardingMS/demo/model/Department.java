@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,8 @@ public class Department {
 	
 	private String deptName;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
+	@Column(nullable = true)
 	private List<Employee> employee = new ArrayList();
 	
 	@OneToOne

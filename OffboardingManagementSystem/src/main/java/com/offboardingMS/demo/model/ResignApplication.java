@@ -25,7 +25,7 @@ public class ResignApplication {
 	private Integer id;
 	
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
 	private Employee employee;
     
     @Enumerated(EnumType.STRING)

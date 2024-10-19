@@ -102,18 +102,16 @@ public class HrServiceImple implements HrService{
 	}
 
 	@Override
-	public ResignApplication checkStatusOfResignApplication(Integer empId) throws EmployeeNotFoundException {
-		Optional<Employee> employee = employeeRepo.findById(empId);
-		if(employee.isPresent()) {
-			Employee emp = employee.get();
-			ResignApplication app = resignationRepo.findByEmployee(emp);
-			return app;
+	public ResignApplication checkStatusOfResignApplication(Integer appId) throws EmployeeNotFoundException {
+		Optional<ResignApplication> resigApp =  resignRepo.findById(appId);
+		if(resigApp.isPresent()) {
+			return resigApp.get();
 		}
 		throw new EmployeeNotFoundException("Employee not found by employee Id");
 	}
 
 	@Override
-	public ResignationApplicationResponseDTO updateStatusOfApplication(ApplicationUpdateByHrDTO applicationUpdateByHr) throws ResignationNotFoundException, NotAllowedException {
+	public ResignationApplicationResponseDTO updateStatusOfApplication(ApplicationUpdateByHrDTO applicationUpdateByHr) throws ResignationNotFoundException, NotAllowedException, EmployeeNotFoundException {
 		Optional<ResignApplication> optionalApp = resignationRepo.findById(applicationUpdateByHr.getApplicationId());
 		if(optionalApp.isEmpty()) {
 			throw new ResignationNotFoundException("Resignation not found by applictionId");
@@ -142,18 +140,6 @@ public class HrServiceImple implements HrService{
 			resignationRepo.save(resigApplication);
 			return responseDTO;
 		}
-		else if(resigApplication.getNextStep().equals(Status.UPDATE_HR_RECORDS) && hrRepo.findById(applicationUpdateByHr.getHrManagerId()).isPresent()) {
-			ResignationApplicationResponseDTO responseDTO = new ResignationApplicationResponseDTO("HR records Updated",resigApplication);
-			Optional<ResignApplication> resigApp =  resignRepo.findById(applicationUpdateByHr.getApplicationId());
-			if(resigApp.isEmpty()) {
-				throw new ResignationNotFoundException("No resignation found by application id");
-			}
-			employeeRepo.delete(resigApp.get().getEmployee());
-			resigApplication.getHistory().add(Status.REVOKE_COMPANY_ACCESS);
-			resigApplication.setNextStep(Status.RETRIEVE_COMPANY_PROPERTY);
-			resignationRepo.save(resigApplication);
-			return responseDTO;
-		}
 		else if(resigApplication.getNextStep().equals(Status.RETRIEVE_COMPANY_PROPERTY) && hrRepo.findById(applicationUpdateByHr.getHrManagerId()).isPresent()) {
 			ResignationApplicationResponseDTO responseDTO = new ResignationApplicationResponseDTO("Company Property Retrived",resigApplication);
 			resigApplication.getHistory().add(Status.RETRIEVE_COMPANY_PROPERTY);
@@ -175,7 +161,19 @@ public class HrServiceImple implements HrService{
 			resignationRepo.save(resigApplication);
 			return responseDTO;
 		}
-		return null;
+		else if(resigApplication.getNextStep().equals(Status.UPDATE_HR_RECORDS) && hrRepo.findById(applicationUpdateByHr.getHrManagerId()).isPresent()) {
+			ResignationApplicationResponseDTO responseDTO = new ResignationApplicationResponseDTO("HR records Updated",resigApplication);
+			Optional<ResignApplication> resigApp =  resignRepo.findById(applicationUpdateByHr.getApplicationId());
+			if(resigApp.isEmpty()) {
+				throw new ResignationNotFoundException("No resignation found by application id");
+			}
+			employeeRepo.delete(resigApp.get().getEmployee());
+			resigApplication.getHistory().add(Status.UPDATE_HR_RECORDS);
+			resigApplication.setNextStep(Status.RETRIEVE_COMPANY_PROPERTY);
+			resignationRepo.save(resigApplication);
+			return responseDTO;
+		}
+		throw new EmployeeNotFoundException("Applications is closed and Employee is deleted from the system");
 	}
 
 	@Override
@@ -184,8 +182,8 @@ public class HrServiceImple implements HrService{
 		if(employee.isPresent()) {
 			Employee emp = employee.get();
 			try {
-				ResignApplication application= resignationRepo.findByEmployee(emp);
-				if(application.getHistory().get(application.getHistory().size()-1).equals(Status.NOTIFIY_ALL_EMPLOYEE)) {
+				List<ResignApplication> application= resignationRepo.findByEmployee(emp);
+				if(application.get(0).getHistory().get(application.get(0).getHistory().size()-1).equals(Status.NOTIFIY_ALL_EMPLOYEE)) {
 					employeeRepo.delete(emp);
 				}
 			}
@@ -202,7 +200,5 @@ public class HrServiceImple implements HrService{
 		HumanResourceManager hr =  hrRepo.findAll().get(0);
 		return hr;
 	}
-
-
 
 }
