@@ -62,41 +62,31 @@ public class HrServiceImple implements HrService{
 		ResignApplication employeeResignation = new ResignApplication(employee);
 		//Notify management
 		List<DepartmentHead> departmentHead = allDepartmentHeads.findAll();
-		System.out.println(3);
 		for(DepartmentHead departmentHeademp:departmentHead) {
 			departmentHeademp.getNotifications().add("Employee"+" "+employee.getName()+" from department "+employee.getDepartment().getDeptName()+" has submitted Resignation");
 			departmentHeademp.getApplications().add(employeeResignation);
 			allDepartmentHeads.save(departmentHeademp);
 		}
-		System.out.println(4);
 		employeeResignation.setNextStep(Status.NOTIFY_MANAGEMENT);
 		resignationRepo.save(employeeResignation);
-		System.out.println(5);
 
 		HumanResourceManager hr = hrRepo.findAll().get(0);
 		hr.getApplications().add(employeeResignation);
 		hr.getNotifications().add("Employee"+" "+employee.getName()+" from department "+employee.getDepartment().getDeptName()+" has submitted Resignation");
 		hrRepo.save(hrRepo.findAll().get(0));
-		
-		System.out.println(6);
+
 
 		
 		SuperAdmin superAdmin = superAdminRepo.findAll().get(0);
-		System.out.println(10);
 		superAdmin.getApplications().add(employeeResignation);
-		System.out.println(8);
 		superAdmin.getNotifications().add("Employee"+" "+employee.getName()+" from department "+employee.getDepartment().getDeptName()+" has submitted Resignation");
 		superAdminRepo.save(superAdminRepo.findAll().get(0));
-		System.out.println(9);
 		employeeResignation.getHistory().add(Status.NOTIFY_MANAGEMENT);
-		System.out.println(10);
 
 		employeeResignation.setNextStep(Status.SCHEDULE_EXIT_INTERVIEW);
-		System.out.println(11);
 
 		resignRepo.save(employeeResignation);
 		
-		System.out.println(7);
 
 		return employeeResignation;
 	}
@@ -116,17 +106,12 @@ public class HrServiceImple implements HrService{
 		if(optionalApp.isEmpty()) {
 			throw new ResignationNotFoundException("Resignation not found by applictionId");
 		}
-		System.out.println(1);
 
 		ResignApplication resigApplication = optionalApp.get();
-		System.out.println(resigApplication.getNextStep()+" ******************");
 		if(resigApplication.getNextStep().equals(Status.SCHEDULE_EXIT_INTERVIEW) && hrRepo.findById(applicationUpdateByHr.getHrManagerId()).isPresent()) {
-			System.out.println(2);
 			ResignationApplicationResponseDTO responseDTO = new ResignationApplicationResponseDTO("Interview is successfuly scheduled.",resigApplication);
 			resigApplication.getHistory().add(Status.SCHEDULE_EXIT_INTERVIEW);
 			resigApplication.setNextStep(Status.KNOWLEDGE_TRANSFER);
-			System.out.println(3);
-
 			resignationRepo.save(resigApplication);
 			return responseDTO;
 		}
